@@ -7,10 +7,7 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.DriveShooter;
-import frc.robot.commands.DriveToStage;
 import frc.robot.subsystems.ExampleSubsystem;
-import frc.robot.subsystems.Shooter;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -24,7 +21,6 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
-  private final Shooter m_shooter = new Shooter();
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController =
@@ -50,39 +46,9 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition)
         .onTrue(new ExampleCommand(m_exampleSubsystem));
 
-    // //Setup trigger to start movement of a shooter motor forward on press of y button
-    // new Trigger(m_driverController.y())
-    //   .onTrue(new DriveShooter(m_shooter, 1));
-
-    // //Setup trigger to stop movement of a shooter on press of x button
-    // new Trigger(m_driverController.x())
-    //   .onTrue(new DriveShooter(m_shooter, 0));
-  
-    // //Setup trigger to start movement of a shooter motor backwards on press of a button
-    // new Trigger(m_driverController.a())
-    //   .onTrue(new DriveShooter(m_shooter, -1));
-       
-      //Setup trigger to start movement of a shooter motor forward on press of y button
-      new Trigger(m_driverController.y())
-      .onTrue(new DriveToStage(m_shooter, 2));
-  
-      //Setup trigger to stop movement of a shooter on press of x button
-      new Trigger(m_driverController.x())
-        .onTrue(new DriveToStage(m_shooter, 1));
-    
-      //Setup trigger to start movement of a shooter motor backwards on press of a button
-      new Trigger(m_driverController.a())
-        .onTrue(new DriveToStage(m_shooter, 0));
-         
-
-
-
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
     // cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
-
-    //schedule a command to run the shooter forward on press
-
   }
 
   /**
