@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.util.sendable.SendableRegistry;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 import com.revrobotics.spark.SparkMax;
@@ -27,7 +28,7 @@ public class Robot extends TimedRobot {
 
   private final DifferentialDrive m_robotDrive = new DifferentialDrive(m_leftMotor::set, m_rightMotor::set);
   private final Joystick m_stick = new Joystick(0);
-
+  private final XboxController mController = new XboxController(1);
   /** Called once at the beginning of the robot program. */
   public Robot() {
     SendableRegistry.addChild(m_robotDrive, m_leftMotor);
@@ -38,16 +39,26 @@ public class Robot extends TimedRobot {
     // gearbox is constructed, you might have to invert the left side instead.
     m_rightMotor.setInverted(true);
   }
+ 
+  
 
   @Override
   public void teleopPeriodic() {
-    if (m_stick.getTrigger()){
-      spark1.set(m_stick.getRawAxis(3)*0.1); 
-      spark2.set(m_stick.getRawAxis(3)*0.1);
-    } else{
-      spark1.set(0);
-      spark2.set(0);
+
+    // if (m_stick.getTrigger()){
+      spark1.set(   mController.getLeftTriggerAxis()  *   0.1   ); 
+      spark2.set(   mController.getRightTriggerAxis() *   0.1   );
+    // } else{
+    //   spark1.set(0);
+    //   spark2.set(0);
+    // }
+    if (mController.getAButton()){
+
+      spark1.set(  - mController.getLeftTriggerAxis()  *   0.1   ); 
+      spark2.set(  - mController.getRightTriggerAxis() *   0.1   );
     }
+
+
     // Drive with arcade drive.
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
