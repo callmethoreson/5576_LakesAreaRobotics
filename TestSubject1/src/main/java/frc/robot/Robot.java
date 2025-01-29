@@ -42,8 +42,8 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     if (m_stick.getTrigger()){
-      spark1.set(0.05); 
-      spark2.set(0.05);
+      spark1.set(m_stick.getRawAxis(3)*0.1); 
+      spark2.set(m_stick.getRawAxis(3)*0.1);
     } else{
       spark1.set(0);
       spark2.set(0);
@@ -52,6 +52,7 @@ public class Robot extends TimedRobot {
     // That means that the Y axis drives forward
     // and backward, and the X turns left and right.
     //m_robotDrive.arcadeDrive(m_stick.getY()*0.5, -m_stick.getZ()*0.5);
+    m_robotDrive.arcadeDrive(0, 0);
 
     
   }
