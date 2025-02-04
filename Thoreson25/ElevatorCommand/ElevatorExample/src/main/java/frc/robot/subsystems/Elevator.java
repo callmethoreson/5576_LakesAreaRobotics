@@ -7,32 +7,39 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class ExampleSubsystem extends SubsystemBase {
-  /** Creates a new ExampleSubsystem. */
-  public ExampleSubsystem() {}
+import com.revrobotics.spark.config.SparkMaxConfig;
+import com.revrobotics.spark.SparkMax;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.SparkBase.ResetMode;
 
-  /**
-   * Example command factory method.
-   *
-   * @return a command
-   */
-  public Command exampleMethodCommand() {
-    // Inline construction of command goes here.
-    // Subsystem::RunOnce implicitly requires `this` subsystem.
-    return runOnce(
-        () -> {
-          /* one-time action goes here */
-        });
+public class Elevator extends SubsystemBase {
+
+  private final SparkMax leftSpark = new SparkMax(5, MotorType.kBrushless);
+  private final SparkMax rightSpark = new SparkMax(6, MotorType.kBrushless);
+
+  private final SparkMaxConfig leftConfig = new SparkMaxConfig();
+  private final SparkMaxConfig rightConfig = new SparkMaxConfig();
+
+  private final double speedScalar = 0.1;
+
+
+  public Elevator() {
+    leftConfig.inverted(true);
+    rightConfig.inverted(false);
+
+    leftSpark.configure(leftConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
+    rightSpark.configure(rightConfig, ResetMode.kNoResetSafeParameters, PersistMode.kPersistParameters);
   }
 
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
+  public boolean aboveMaxHeight() {
     // Query some boolean state, such as a digital sensor.
     return false;
+  }
+
+  public void setSpeed(double speed){
+    leftSpark.set(speed * speedScalar);
+    rightSpark.set(speed * speedScalar);
   }
 
   @Override
@@ -40,8 +47,9 @@ public class ExampleSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  @Override
-  public void simulationPeriodic() {
-    // This method will be called once per scheduler run during simulation
+  public Command exampleMethodCommand() {
+    // TODO Auto-generated method stub
+    throw new UnsupportedOperationException("Unimplemented method 'exampleMethodCommand'");
   }
+
 }
