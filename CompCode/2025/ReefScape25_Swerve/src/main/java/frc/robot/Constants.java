@@ -20,13 +20,19 @@ public final class Constants {
 
   public static final class SubsystemConstants {
     //elevator
-    public static final int kLeftElevatorCanID = 1;
-    public static final int kRightElevatorCanID = 2;
+    public static final int kLeftElevatorCanID = 3;
+    public static final int kRightElevatorCanID = 4;
+
     //shooter
+    public static final int kShooterCanID = 5;
+    public static final int kWristCanID = 6;
 
     //climber
+    public static final int kClimberCanID = 7;
 
   }
+
+
 
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of

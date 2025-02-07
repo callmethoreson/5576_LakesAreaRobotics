@@ -14,9 +14,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
-import com.ctre.phoenix6.configs.TalonFXConfiguration;
-import com.ctre.phoenix6.configs.TalonFXConfigurator;
-
 
 public class ElevatorSubsystem extends SubsystemBase {
 
@@ -41,6 +38,16 @@ public class ElevatorSubsystem extends SubsystemBase {
     private double currentHeight = 0;
     private double desiredHeight = 0;
 
+    //stage enum
+    public enum ElevatorStage {
+        PARK,
+        INTAKE,
+        FIRST,
+        SECOND,
+        THIRD,
+        FOURTH,
+    }
+
     /** Creates a new ExampleSubsystem. */
     public ElevatorSubsystem(CommandXboxController controller) {
         m_controller = controller;
@@ -62,12 +69,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         updateDistance();
-
-        SmartDashboard.putNumber("Left Elevator Encoder", m_leftMotor.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("Right Elevator Encoder", m_rightMotor.getPosition().getValueAsDouble());
-
-        //set speed to 0 by default
-        setSpeed(0);
+        checkControllerInputs();
+        setSpeed(0); //default speeds to zero
 
         //two modes, manual and automatic, default to automatic, commands will be used to set this.
         if (manualMode) {
@@ -113,5 +116,14 @@ public class ElevatorSubsystem extends SubsystemBase {
         leftDistance = m_leftMotor.getPosition().getValueAsDouble();
         rightDistance = m_rightMotor.getPosition().getValueAsDouble();
         currentHeight = (leftDistance + rightDistance) / 2;
+        SmartDashboard.putNumber("Left Elevator Encoder", m_leftMotor.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Right Elevator Encoder", m_rightMotor.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Current Height", currentHeight);
+    }
+
+    private void checkControllerInputs(){
+        if(m_controller.getRightTriggerAxis() > 0.1 || m_controller.getLeftTriggerAxis() > 0.1){
+            setManualMode(true);
+        }
     }
 }
