@@ -4,7 +4,7 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.FalconSubsystem;
+import frc.robot.subsystems.KrakenSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 
@@ -15,7 +15,7 @@ import com.revrobotics.RelativeEncoder;
 /** An example command that uses an example subsystem. */
 public class SetDistance extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final FalconSubsystem m_subsystem;
+  private final KrakenSubsystem m_subsystem;
   private final double desiredDistance;
   private boolean finished;
   private double error;
@@ -25,7 +25,7 @@ public class SetDistance extends Command {
    *
    * @param subsystem The subsystem used by this command.
    */
-  public SetDistance(FalconSubsystem subsystem, double absDistance) {
+  public SetDistance(KrakenSubsystem subsystem, double absDistance) {
     m_subsystem = subsystem;
     desiredDistance = absDistance;
     finished = false;

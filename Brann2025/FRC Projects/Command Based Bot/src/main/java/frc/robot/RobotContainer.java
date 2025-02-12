@@ -9,6 +9,8 @@ import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SetDistance;
 import frc.robot.subsystems.FalconSubsystem;
+import frc.robot.subsystems.KrakenSubsystem;
+import frc.robot.subsystems.SparkSubsystem;
 
 import java.util.Set;
 
@@ -28,7 +30,9 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-  private final FalconSubsystem m_exampleSubsystem = new FalconSubsystem(m_driverController);
+  private final KrakenSubsystem m_exampleSubsystem = new KrakenSubsystem(m_driverController);
+  private final FalconSubsystem m_exampleFalcon = new FalconSubsystem(m_driverController);
+  private final SparkSubsystem  m_exampleSpark = new SparkSubsystem(m_driverController);
 
 
 
@@ -60,10 +64,10 @@ public class RobotContainer {
     // new Trigger(m_driverController.x()).onTrue(new ExampleCommand(m_exampleSubsystem, 6));
     // new Trigger(m_driverController.y()).onTrue(new ExampleCommand(m_exampleSubsystem, 8));
 
-    new Trigger(m_driverController.a()).onTrue(new SetDistance(m_exampleSubsystem, 2));
-    new Trigger(m_driverController.b()).onTrue(new SetDistance(m_exampleSubsystem, 4));
-    new Trigger(m_driverController.x()).onTrue(new SetDistance(m_exampleSubsystem, 6));
-    new Trigger(m_driverController.y()).onTrue(new SetDistance(m_exampleSubsystem, 8));
+    new Trigger(m_driverController.a()).onTrue(new SetDistance(m_exampleSubsystem, 20));
+    new Trigger(m_driverController.b()).onTrue(new SetDistance(m_exampleSubsystem, 40));
+    new Trigger(m_driverController.x()).onTrue(new SetDistance(m_exampleSubsystem, 60));
+    new Trigger(m_driverController.y()).onTrue(new SetDistance(m_exampleSubsystem, 80));
 
   }
 
