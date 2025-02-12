@@ -77,7 +77,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             //make sure we dont go below minimum height
             if (leftDistance <= minHeight || rightDistance <= minHeight) {
                 setSpeed(m_controller.getRightTriggerAxis());                //only allow driving up
-            }else if(leftDistance >= maxHeight || rightDistance <= maxHeight){
+            }else if(leftDistance >= maxHeight || rightDistance >= maxHeight){
                 setSpeed(-m_controller.getLeftTriggerAxis());                //only allow driving down
             }else{
                 //allow driving up or down
