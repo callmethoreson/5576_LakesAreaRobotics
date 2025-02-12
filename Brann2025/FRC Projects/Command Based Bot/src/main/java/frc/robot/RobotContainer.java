@@ -7,7 +7,9 @@ package frc.robot;
 import frc.robot.Constants.OperatorConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
-import frc.robot.commands.SetDistance;
+import frc.robot.commands.SetElevatorHeight;
+import frc.robot.commands.SetKrakenDistance;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.FalconSubsystem;
 import frc.robot.subsystems.KrakenSubsystem;
 import frc.robot.subsystems.SparkSubsystem;
@@ -30,9 +32,10 @@ public class RobotContainer {
   private final CommandXboxController m_driverController =
       new CommandXboxController(OperatorConstants.kDriverControllerPort);
 
-  private final KrakenSubsystem m_exampleSubsystem = new KrakenSubsystem(m_driverController);
-  private final FalconSubsystem m_exampleFalcon = new FalconSubsystem(m_driverController);
-  private final SparkSubsystem  m_exampleSpark = new SparkSubsystem(m_driverController);
+  //private final KrakenSubsystem m_exampleSubsystem = new KrakenSubsystem(m_driverController);
+  //private final FalconSubsystem m_exampleFalcon = new FalconSubsystem(m_driverController);
+  //private final SparkSubsystem  m_exampleSpark = new SparkSubsystem(m_driverController);
+  private final ElevatorSubsystem m_elevator = new ElevatorSubsystem(m_driverController);
 
 
 
@@ -64,10 +67,17 @@ public class RobotContainer {
     // new Trigger(m_driverController.x()).onTrue(new ExampleCommand(m_exampleSubsystem, 6));
     // new Trigger(m_driverController.y()).onTrue(new ExampleCommand(m_exampleSubsystem, 8));
 
-    new Trigger(m_driverController.a()).onTrue(new SetDistance(m_exampleSubsystem, 20));
-    new Trigger(m_driverController.b()).onTrue(new SetDistance(m_exampleSubsystem, 40));
-    new Trigger(m_driverController.x()).onTrue(new SetDistance(m_exampleSubsystem, 60));
-    new Trigger(m_driverController.y()).onTrue(new SetDistance(m_exampleSubsystem, 80));
+    // new Trigger(m_driverController.a()).onTrue(new SetKrakenDistance(m_exampleSubsystem, 20));
+    // new Trigger(m_driverController.b()).onTrue(new SetKrakenDistance(m_exampleSubsystem, 40));
+    // new Trigger(m_driverController.x()).onTrue(new SetKrakenDistance(m_exampleSubsystem, 60));
+    // new Trigger(m_driverController.y()).onTrue(new SetKrakenDistance(m_exampleSubsystem, 80));
+
+    new Trigger(m_driverController.a()).onTrue(new SetElevatorHeight(m_elevator, 0));
+    new Trigger(m_driverController.b()).onTrue(new SetElevatorHeight(m_elevator, 20));
+    new Trigger(m_driverController.x()).onTrue(new SetElevatorHeight(m_elevator, 40));
+    new Trigger(m_driverController.y()).onTrue(new SetElevatorHeight(m_elevator, 60));
+    
+
 
   }
 
@@ -78,6 +88,7 @@ public class RobotContainer {
    */
   public Command getAutonomousCommand() {
     // An example command will be run in autonomous
-    return Autos.exampleAuto(m_exampleSubsystem);
+    //return Autos.exampleAuto(m_exampleSubsystem);
+    return null;
   }
 }

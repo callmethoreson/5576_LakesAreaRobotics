@@ -4,11 +4,11 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.SubsystemConstants;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -17,8 +17,8 @@ import com.ctre.phoenix6.configs.MotorOutputConfigs;
 
 public class ElevatorSubsystem extends SubsystemBase {
 
-    private final TalonFX m_leftMotor = new TalonFX(SubsystemConstants.kLeftElevatorCanID);
-    private final TalonFX m_rightMotor = new TalonFX(SubsystemConstants.kRightElevatorCanID);
+    private final TalonFX m_leftMotor = new TalonFX(4);
+    private final TalonFX m_rightMotor = new TalonFX(5);
     private final CommandXboxController m_controller;
 
     private double leftDistance = 0;
@@ -31,7 +31,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private double rightSpeed = 0;
 
     private boolean manualMode = false;
-    private double autoModeSpeed = 0.3;
+    private double autoModeSpeed = 0.1;
 
     private double error = 0.5;
 
@@ -57,12 +57,14 @@ public class ElevatorSubsystem extends SubsystemBase {
         m_leftMotor.setNeutralMode(NeutralModeValue.Brake);
 
         //setup right talonfx as inverted and in brake mode
-        m_rightMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
+        m_rightMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
         m_rightMotor.setNeutralMode(NeutralModeValue.Brake);
 
         //zero the encoders
         m_leftMotor.setPosition(0);
         m_rightMotor.setPosition(0);
+
+        enableManualMode(true);
     }
 
     //called once per scheduler run
@@ -70,7 +72,6 @@ public class ElevatorSubsystem extends SubsystemBase {
     public void periodic() {
         updateDistance();
         checkControllerInputs();
-        setSpeed(0); //default speeds to zero
 
         //two modes, manual and automatic, default to automatic, commands will be used to set this.
         if (manualMode) {
@@ -85,9 +86,9 @@ public class ElevatorSubsystem extends SubsystemBase {
             }
         } else {
             //automatic mode, use commands to set desired height, auto mode will drive to desired height
-            if(currentHeight < (desiredHeight + error)){
+            if(currentHeight < (desiredHeight - error)){
                 setSpeed(autoModeSpeed); //drive up
-            }else if(currentHeight > (desiredHeight - error)){
+            }else if(currentHeight > (desiredHeight + error)){
                 setSpeed(-autoModeSpeed); //drive down
             }else{
                 setSpeed(0); //stop
@@ -99,31 +100,52 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     }
 
-    public void setManualMode(boolean mode) {
+    public void enableManualMode(boolean mode) {
         manualMode = mode;
     }
 
     private void setSpeed(double speed) {
-        leftSpeed = speed;
-        rightSpeed = speed;
+
+        if(manualMode){
+            if(Math.abs(speed) > 0.05){
+                leftSpeed = speed;
+                rightSpeed = speed;    
+            }else{
+                leftSpeed = 0;
+                rightSpeed = 0;    
+            }
+        }else{
+            leftSpeed = speed;
+            rightSpeed = speed; 
+        }
+
+
     }
 
     public void setDesiredHeight(double height){
         desiredHeight = height;
+        enableManualMode(false);
     }
 
     private void updateDistance() {
         leftDistance = m_leftMotor.getPosition().getValueAsDouble();
         rightDistance = m_rightMotor.getPosition().getValueAsDouble();
         currentHeight = (leftDistance + rightDistance) / 2;
-        SmartDashboard.putNumber("Left Elevator Encoder", m_leftMotor.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("Right Elevator Encoder", m_rightMotor.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Left Distance", leftDistance);
+        SmartDashboard.putNumber("Right Distance", rightDistance);
         SmartDashboard.putNumber("Current Height", currentHeight);
+        SmartDashboard.putNumber("Desired Height", desiredHeight);
+
+        SmartDashboard.putNumber("LeftSpeed", leftSpeed);
+        SmartDashboard.putNumber("RightSpeed", rightSpeed);
+
+
+        SmartDashboard.putBoolean("ManualMode", manualMode);
     }
 
     private void checkControllerInputs(){
         if(m_controller.getRightTriggerAxis() > 0.1 || m_controller.getLeftTriggerAxis() > 0.1){
-            setManualMode(true);
+            enableManualMode(true);
         }
     }
 }

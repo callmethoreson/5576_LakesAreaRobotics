@@ -4,6 +4,7 @@
 
 package frc.robot.commands;
 
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.KrakenSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -13,23 +14,21 @@ import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 
 /** An example command that uses an example subsystem. */
-public class SetDistance extends Command {
+public class SetElevatorHeight extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final KrakenSubsystem m_subsystem;
-  private final double desiredDistance;
+  private final ElevatorSubsystem m_subsystem;
+  private final double desiredHeight;
   private boolean finished;
-  private double error;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public SetDistance(KrakenSubsystem subsystem, double absDistance) {
+  public SetElevatorHeight(ElevatorSubsystem subsystem, double absDistance) {
     m_subsystem = subsystem;
-    desiredDistance = absDistance;
+    desiredHeight = absDistance;
     finished = false;
-    error = 1;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -41,9 +40,7 @@ public class SetDistance extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    m_subsystem.setDesiredDistance(desiredDistance);
-
+    m_subsystem.setDesiredHeight(desiredHeight);
   }
 
   // Called once the command ends or is interrupted.
