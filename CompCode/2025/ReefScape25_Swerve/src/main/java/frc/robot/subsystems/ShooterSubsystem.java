@@ -33,8 +33,6 @@ public class ShooterSubsystem extends SubsystemBase {
   private double currentHeight = 0;
   private double desiredHeight = 0;
 
-  
-
   /** Creates a new ExampleSubsystem. */
   public ShooterSubsystem(CommandXboxController controller) {
     this.controller = controller;
