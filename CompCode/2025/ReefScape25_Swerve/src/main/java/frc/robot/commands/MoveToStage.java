@@ -59,11 +59,12 @@ public class MoveToStage extends Command {
             break;
         default:
             //move elevator to park
+            height = 0;
             break;
     }
 
     m_subsystem.setDesiredHeight(height);
-    m_subsystem.setManualMode(false); //want to run in auto mode
+    m_subsystem.enableManualMode(false); //want to run in auto mode
 
   }
 
