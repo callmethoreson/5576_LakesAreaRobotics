@@ -57,7 +57,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         m_leftMotor.setNeutralMode(NeutralModeValue.Brake);
 
         //setup right talonfx as inverted and in brake mode
-        m_rightMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
+        m_rightMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
         m_rightMotor.setNeutralMode(NeutralModeValue.Brake);
 
         //zero the encoders

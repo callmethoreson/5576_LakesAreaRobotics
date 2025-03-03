@@ -25,7 +25,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     private double rightDistance = 0;
 
     private double minHeight = 0.5;
-    private double maxHeight = 5;
+    private double maxHeight = 5000; 
 
     private double leftSpeed = 0;
     private double rightSpeed = 0;
@@ -53,11 +53,11 @@ public class ElevatorSubsystem extends SubsystemBase {
         m_controller = controller;
 
         //setup left talonfx as inverted and in brake mode
-        m_leftMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
+        m_leftMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
         m_leftMotor.setNeutralMode(NeutralModeValue.Brake);
 
         //setup right talonfx as inverted and in brake mode
-        m_rightMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
+        m_rightMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
         m_rightMotor.setNeutralMode(NeutralModeValue.Brake);
 
         //zero the encoders
