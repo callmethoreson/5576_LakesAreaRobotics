@@ -111,7 +111,7 @@ public class ElevatorSubsystem extends SubsystemBase {
                 leftSpeed = speed;
                 rightSpeed = speed;    
             }else{
-                leftSpeed = 0;asdfasdfasdfasdfsda
+                leftSpeed = 0;
                 rightSpeed = 0;    
             }
         }else{
