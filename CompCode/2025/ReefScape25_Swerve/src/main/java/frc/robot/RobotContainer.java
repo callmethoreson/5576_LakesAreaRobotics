@@ -4,12 +4,17 @@
 
 package frc.robot;
 
+import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
+import frc.robot.commands.SetElevatorHeight;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
@@ -27,10 +32,24 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller or CommandJoystick if needed
   private final CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
+  private final ElevatorSubsystem m_elevator = new ElevatorSubsystem(m_driverController);
+
+
 
   /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
     // Configure the trigger bindings
+    m_robotDrive.setDefaultCommand(
+        // The left stick controls translation of the robot.
+        // Turning is controlled by the X axis of the right stick.
+        new RunCommand(
+            () -> m_robotDrive.drive( //Xbox
+                -MathUtil.applyDeadband(m_driverController.getLeftY() * DriveConstants.kSpeedScalingConstant, OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(m_driverController.getLeftX() * DriveConstants.kSpeedScalingConstant, OIConstants.kDriveDeadband),
+                -MathUtil.applyDeadband(m_driverController.getRightX() * DriveConstants.kSpeedScalingConstant, OIConstants.kDriveDeadband),
+                true),
+            m_robotDrive));
+
     configureBindings();
   }
 
@@ -42,6 +61,16 @@ public class RobotContainer {
     new Trigger(m_exampleSubsystem::exampleCondition).onTrue(new ExampleCommand(m_exampleSubsystem));
     // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed, cancelling on release.
     m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand());
+
+    new Trigger(m_driverController.start()).onTrue(m_robotDrive.setXCommand());
+
+
+    new Trigger(m_driverController.a()).onTrue(new SetElevatorHeight(m_elevator, 0));
+    new Trigger(m_driverController.b()).onTrue(new SetElevatorHeight(m_elevator, 20));
+    new Trigger(m_driverController.x()).onTrue(new SetElevatorHeight(m_elevator, 40));
+    new Trigger(m_driverController.y()).onTrue(new SetElevatorHeight(m_elevator, 60));
+
+
   }
 
   /**
