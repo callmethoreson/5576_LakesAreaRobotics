@@ -24,8 +24,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     private double leftDistance = 0;
     private double rightDistance = 0;
 
-    private double minHeight = 0.5;
-    private double maxHeight = 5;
+    private double minHeight = 0;
+    private double maxHeight = 65;
 
     private double leftSpeed = 0;
     private double rightSpeed = 0;
@@ -138,7 +138,6 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("LeftSpeed", leftSpeed);
         SmartDashboard.putNumber("RightSpeed", rightSpeed);
-
 
         SmartDashboard.putBoolean("ManualMode", manualMode);
     }
