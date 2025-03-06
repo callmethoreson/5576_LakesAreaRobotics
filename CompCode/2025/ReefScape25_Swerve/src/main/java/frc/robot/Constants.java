@@ -24,8 +24,9 @@ public final class Constants {
     public static final int kRightElevatorCanID = 4;
 
     //shooter
-    public static final int kShooterCanID = 5;
-    public static final int kWristCanID = 6;
+    public static final int kShooterLeftCanID = 18;
+    public static final int kShooterRightCanID = 19;
+    public static final int kIntakeID = 20;
 
     //climber
     public static final int kClimberCanID = 7;
