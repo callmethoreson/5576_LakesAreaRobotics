@@ -9,7 +9,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.commands.Autos;
 import frc.robot.commands.ExampleCommand;
 import frc.robot.commands.SetElevatorHeight;
-import frc.robot.commands.ShooterCommands;
+// import frc.robot.commands.ShooterCommands;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
@@ -37,7 +37,7 @@ public class RobotContainer {
   private final CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
   private final CommandXboxController m_secondController = new CommandXboxController(OIConstants.kAssistControllerPort);
   private final ElevatorSubsystem m_elevator = new ElevatorSubsystem(m_secondController);
-  //private final ShooterSubsystem m_shooter = new ShooterSubsystem(m_driverController);
+  private final ShooterSubsystem m_shooter = new ShooterSubsystem();
 
 
 
@@ -55,7 +55,9 @@ public class RobotContainer {
                 true),
             m_robotDrive));
 
+    m_shooter.setDefaultCommand(m_shooter.holdCommand());
     configureBindings();
+
   }
 
   /**
@@ -71,16 +73,16 @@ public class RobotContainer {
 
     //Elevator shooting heights
     new Trigger(m_secondController.a()).onTrue(new SetElevatorHeight(m_elevator, 34.5));
-    new Trigger(m_secondController.b()).onTrue(new SetElevatorHeight(m_elevator, 63.5));
-    new Trigger(m_secondController.x()).onTrue(new SetElevatorHeight(m_elevator, 40));
+    new Trigger(m_secondController.y()).onTrue(new SetElevatorHeight(m_elevator, 63.5));
+    new Trigger(m_secondController.b()).onTrue(new SetElevatorHeight(m_elevator, 48));
     //Elevator intake height
-    new Trigger(m_secondController.y()).onTrue(new SetElevatorHeight(m_elevator, 45));
+    new Trigger(m_secondController.x()).onTrue(new SetElevatorHeight(m_elevator, 40));
 
-    new Trigger(m_driverController.leftBumper().onTrue(new ShooterCommands()));
-    new Trigger(m_driverController.rightBumper().onTrue(new ShooterCommands()));
-    new Trigger(m_driverController.leftTrigger().onTrue(new ShooterCommands()));
-    new Trigger(m_driverController.rightTrigger().onTrue(new ShooterCommands()));
-    new Trigger(m_driverController.b().onTrue(new ShooterCommands()));
+    new Trigger(m_driverController.leftBumper().whileTrue(m_shooter.outtakeTreeCommand()));
+    new Trigger(m_driverController.rightBumper().whileTrue(m_shooter.intakeCommand()));
+    new Trigger(m_driverController.leftTrigger().whileTrue(m_shooter.outtakeL1Command()));
+    // new Trigger(m_driverController.rightTrigger().onTrue(new ShooterCommands(m_shooter)));
+    // new Trigger(m_driverController.b().onTrue(new ShooterCommands(m_shooter)));
 
   }
 

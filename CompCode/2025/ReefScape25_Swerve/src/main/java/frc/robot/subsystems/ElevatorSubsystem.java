@@ -37,34 +37,36 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private double currentHeight = 0;
     private double desiredHeight = 0;
-
-    //stage enum
-    public enum ElevatorStage {
-        PARK,
-        INTAKE,
-        FIRST,
-        SECOND,
-        THIRD,
-        FOURTH,
-    }
-
-    /** Creates a new ExampleSubsystem. */
-    public ElevatorSubsystem(CommandXboxController controller) {
-        m_controller = controller;
-
-        //setup left talonfx as inverted and in brake mode
-        m_leftMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
-        m_leftMotor.setNeutralMode(NeutralModeValue.Brake);
-
-        //setup right talonfx as inverted and in brake mode
-        m_rightMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
-        m_rightMotor.setNeutralMode(NeutralModeValue.Brake);
-
-        //zero the encoders
-        m_leftMotor.setPosition(0);
-        m_rightMotor.setPosition(0);
-
-        enableManualMode(true);
+        private Object enableManual;
+    
+        //stage enum
+        public enum ElevatorStage {
+            PARK,
+            INTAKE,
+            FIRST,
+            SECOND,
+            THIRD,
+            FOURTH,
+        }
+    
+        /** Creates a new ExampleSubsystem. */
+        public ElevatorSubsystem(CommandXboxController controller) {
+            m_controller = controller;
+    
+            //setup left talonfx as inverted and in brake mode
+            m_leftMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
+            m_leftMotor.setNeutralMode(NeutralModeValue.Brake);
+    
+            //setup right talonfx as inverted and in brake mode
+            m_rightMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
+            m_rightMotor.setNeutralMode(NeutralModeValue.Brake);
+    
+            //zero the encoders
+            m_leftMotor.setPosition(0);
+            m_rightMotor.setPosition(0);
+    
+        enableManual{
+        Mode(true);
     }
 
     //called once per scheduler run
@@ -77,9 +79,9 @@ public class ElevatorSubsystem extends SubsystemBase {
         if (manualMode) {
             //make sure we dont go below minimum height
             if (leftDistance <= minHeight || rightDistance <= minHeight) {
-                setSpeed(m_controller.getRightTriggerAxis());                //only allow driving up
+                setSpeed(m_controller.getRightTriggerAxis()*.5);                //only allow driving up
             }else if(leftDistance >= maxHeight || rightDistance >= maxHeight){
-                setSpeed(-m_controller.getLeftTriggerAxis());                //only allow driving down
+                setSpeed(-m_controller.getLeftTriggerAxis()*.5);                //only allow driving down
             }else{
                 //allow driving up or down
                 setSpeed(m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis());
@@ -148,4 +150,5 @@ public class ElevatorSubsystem extends SubsystemBase {
             enableManualMode(true);
         }
     }
+
 }
