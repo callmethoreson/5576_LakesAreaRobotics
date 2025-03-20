@@ -1,0 +1,79 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Caleb Test Path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Place_Coral"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Caleb Test 2 Path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake_Coral"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Caleb Test 3 Path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Place_Coral"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 2.0
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Caleb Test 4 Path"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Intake_Coral"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Auto Folder",
+  "choreoAuto": false
+}

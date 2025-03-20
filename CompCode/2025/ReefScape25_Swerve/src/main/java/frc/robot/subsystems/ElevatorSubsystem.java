@@ -15,140 +15,160 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.configs.MotorOutputConfigs;
 
+
 public class ElevatorSubsystem extends SubsystemBase {
 
+   
     private final TalonFX m_leftMotor = new TalonFX(4);
     private final TalonFX m_rightMotor = new TalonFX(5);
-    private final CommandXboxController m_controller;
-
-    private double leftDistance = 0;
-    private double rightDistance = 0;
-
-    private double minHeight = 0.5;
-    private double maxHeight = 5;
-
-    private double leftSpeed = 0;
-    private double rightSpeed = 0;
-
-    private boolean manualMode = false;
-    private double autoModeSpeed = 0.1;
-
-    private double error = 0.5;
-
-    private double currentHeight = 0;
-    private double desiredHeight = 0;
-        private Object enableManual;
+        private final CommandXboxController m_controller;
     
-        //stage enum
-        public enum ElevatorStage {
-            PARK,
-            INTAKE,
-            FIRST,
-            SECOND,
-            THIRD,
-            FOURTH,
+        private double leftDistance = 0;
+        private double rightDistance = 0;
+    
+        private double minHeight = 0.5;
+        private double maxHeight = 5;
+    
+        private double leftSpeed = 0;
+        private double rightSpeed = 0;
+    
+        private boolean manualMode = false;
+        private double autoModeSpeedUp = 0.55;
+        private double autoModeSpeedDown = -0.40;
+    
+        private double error = 0.5;
+    
+        public double currentHeight = 0;
+        private double desiredHeight = 0;
+        
+            //stage enum
+            public enum ElevatorStage {
+                PARK,
+                INTAKE,
+                FIRST,
+                SECOND,
+                THIRD,
+                FOURTH,
+            }
+        
+            /** Creates a new ExampleSubsystem. */
+            public ElevatorSubsystem(CommandXboxController controller) {
+                m_controller = controller;
+        
+                //setup left talonfx as inverted and in brake mode
+                m_leftMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
+                m_leftMotor.setNeutralMode(NeutralModeValue.Brake);
+        
+                //setup right talonfx as inverted and in brake mode
+                m_rightMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
+                m_rightMotor.setNeutralMode(NeutralModeValue.Brake);
+        
+                //zero the encoders
+                m_leftMotor.setPosition(0);
+                m_rightMotor.setPosition(0);
+        
+            //enableManual{
+            //Mode(true)
         }
     
-        /** Creates a new ExampleSubsystem. */
-        public ElevatorSubsystem(CommandXboxController controller) {
-            m_controller = controller;
+        //called once per scheduler run
+        @Override
+        public void periodic() {
+            updateDistance();
+            checkControllerInputs();
     
-            //setup left talonfx as inverted and in brake mode
-            m_leftMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.CounterClockwise_Positive));
-            m_leftMotor.setNeutralMode(NeutralModeValue.Brake);
-    
-            //setup right talonfx as inverted and in brake mode
-            m_rightMotor.getConfigurator().apply(new MotorOutputConfigs().withInverted(InvertedValue.Clockwise_Positive));
-            m_rightMotor.setNeutralMode(NeutralModeValue.Brake);
-    
-            //zero the encoders
-            m_leftMotor.setPosition(0);
-            m_rightMotor.setPosition(0);
-    
-        enableManual{
-        Mode(true);
-    }
-
-    //called once per scheduler run
-    @Override
-    public void periodic() {
-        updateDistance();
-        checkControllerInputs();
-
-        //two modes, manual and automatic, default to automatic, commands will be used to set this.
-        if (manualMode) {
-            //make sure we dont go below minimum height
-            if (leftDistance <= minHeight || rightDistance <= minHeight) {
-                setSpeed(m_controller.getRightTriggerAxis()*.5);                //only allow driving up
-            }else if(leftDistance >= maxHeight || rightDistance >= maxHeight){
-                setSpeed(-m_controller.getLeftTriggerAxis()*.5);                //only allow driving down
-            }else{
-                //allow driving up or down
-                setSpeed(m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis());
+            //two modes, manual and automatic, default to automatic, commands will be used to set this.
+            if (manualMode) {
+                //make sure we dont go below minimum height
+                if (leftDistance <= minHeight || rightDistance <= minHeight) {
+                    setSpeed(m_controller.getRightTriggerAxis()*.5);                //only allow driving up
+                }else if(leftDistance >= maxHeight || rightDistance >= maxHeight){
+                    setSpeed(-m_controller.getLeftTriggerAxis()*.5);                //only allow driving down
+                }else{
+                    //allow driving up or down
+                    setSpeed(m_controller.getRightTriggerAxis() - m_controller.getLeftTriggerAxis());
+                }
+            } else {
+                //automatic mode, use commands to set desired height, auto mode will drive to desired height
+                if(currentHeight < (desiredHeight - error)){
+                    if(currentHeight < ((desiredHeight - error)-5)){
+                        setSpeed(autoModeSpeedUp); //drive up
+                    }else{
+                        setSpeed(autoModeSpeedUp/2);
+                    }
+                }else if(currentHeight > (desiredHeight + error)){
+                    if(currentHeight > ((desiredHeight - error)-5)){
+                        setSpeed(autoModeSpeedDown); //drive up
+                    }else{
+                        setSpeed(autoModeSpeedDown/2);
+                    }
+                    setSpeed(autoModeSpeedDown); //drive down
+                }else{
+                    setSpeed(0); //stop
+                }
             }
-        } else {
-            //automatic mode, use commands to set desired height, auto mode will drive to desired height
-            if(currentHeight < (desiredHeight - error)){
-                setSpeed(autoModeSpeed); //drive up
-            }else if(currentHeight > (desiredHeight + error)){
-                setSpeed(-autoModeSpeed); //drive down
-            }else{
-                setSpeed(0); //stop
-            }
+    
+            m_leftMotor.set(leftSpeed);
+            m_rightMotor.set(rightSpeed);
+    
         }
-
-        m_leftMotor.set(leftSpeed);
-        m_rightMotor.set(rightSpeed);
-
-    }
-
-    public void enableManualMode(boolean mode) {
-        manualMode = mode;
-    }
-
-    private void setSpeed(double speed) {
-
-        if(manualMode){
-            if(Math.abs(speed) > 0.05){
+    
+        public void enableManualMode(boolean mode) {
+            manualMode = mode;
+        }
+    
+        private void setSpeed(double speed) {
+    
+            if(manualMode){
+                if(Math.abs(speed) > 0.05){
+                    leftSpeed = speed;
+                    rightSpeed = speed;    
+                }else{
+                    leftSpeed = 0;
+                    rightSpeed = 0;    
+                }
+            }else{
                 leftSpeed = speed;
-                rightSpeed = speed;    
-            }else{
-                leftSpeed = 0;
-                rightSpeed = 0;    
+                rightSpeed = speed; 
             }
-        }else{
-            leftSpeed = speed;
-            rightSpeed = speed; 
+    
+    
         }
-
-
-    }
-
-    public void setDesiredHeight(double height){
-        desiredHeight = height;
-        enableManualMode(false);
-    }
-
-    private void updateDistance() {
-        leftDistance = m_leftMotor.getPosition().getValueAsDouble();
-        rightDistance = m_rightMotor.getPosition().getValueAsDouble();
-        currentHeight = (leftDistance + rightDistance) / 2;
-        SmartDashboard.putNumber("Left Distance", leftDistance);
-        SmartDashboard.putNumber("Right Distance", rightDistance);
-        SmartDashboard.putNumber("Current Height", currentHeight);
-        SmartDashboard.putNumber("Desired Height", desiredHeight);
-
-        SmartDashboard.putNumber("LeftSpeed", leftSpeed);
-        SmartDashboard.putNumber("RightSpeed", rightSpeed);
-
-
-        SmartDashboard.putBoolean("ManualMode", manualMode);
-    }
-
-    private void checkControllerInputs(){
-        if(m_controller.getRightTriggerAxis() > 0.1 || m_controller.getLeftTriggerAxis() > 0.1){
-            enableManualMode(true);
+    
+        public void setDesiredHeight(double height){
+            desiredHeight = height;
+            enableManualMode(false);
         }
+    
+        public void updateDistance() {
+            leftDistance = m_leftMotor.getPosition().getValueAsDouble();
+            rightDistance = m_rightMotor.getPosition().getValueAsDouble();
+            currentHeight = (leftDistance + rightDistance) / 2;
+            SmartDashboard.putNumber("Left Distance", leftDistance);
+            SmartDashboard.putNumber("Right Distance", rightDistance);
+            SmartDashboard.putNumber("Current Height", currentHeight);
+            SmartDashboard.putNumber("Desired Height", desiredHeight);
+    
+            SmartDashboard.putNumber("LeftSpeed", leftSpeed);
+            SmartDashboard.putNumber("RightSpeed", rightSpeed);
+    
+    
+            SmartDashboard.putBoolean("ManualMode", manualMode);
+        }
+    
+        private void checkControllerInputs(){
+            if(m_controller.getRightTriggerAxis() > 0.1 || m_controller.getLeftTriggerAxis() > 0.1){
+                enableManualMode(true);
+            }
+        }
+        private void hold(){
+            m_leftMotor.set(0);
+            m_rightMotor.set(0);
+        return;
+    }
+
+    public Command holdCommand() {
+        return run(() -> hold());
     }
 
 }

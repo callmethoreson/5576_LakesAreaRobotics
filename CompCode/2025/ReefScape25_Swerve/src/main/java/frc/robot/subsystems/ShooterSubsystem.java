@@ -29,10 +29,19 @@ public class ShooterSubsystem extends SubsystemBase {
   // private final double shootLeftSpeed = 0.4;
   // private final double shootRightSpeed = 0.4;
 
-  private final double shootSpeedL = 0.8;
-  private final double shootSpeedR = -0.8;
-  private final double slowSpeed = 0.4;
-  private final double intake = 0.4;
+  private final double shootSpeedL = 0.6;
+  private final double shootSpeedR = -0.6;
+  private final double slowSpeedL = 0.9;
+  private final double slowSpeedR = -0.0;
+
+  private final double intake = .8;
+
+
+
+
+
+
+
 
   public ShooterSubsystem() {
     m_shooterConfig.smartCurrentLimit(20);
@@ -111,13 +120,19 @@ public class ShooterSubsystem extends SubsystemBase {
   
   public void outtakeL1 (){
     m_intake.set(intake);
-    m_shooterLeft.set(shootSpeedL);
-    m_shooterRight.set(slowSpeed);
+    m_shooterLeft.set(slowSpeedL);
+    m_shooterRight.set(slowSpeedR);
     return;
   }
   
   public void outtakeTree(){
     m_intake.set(intake);
+    m_shooterLeft.set(shootSpeedL);
+    m_shooterRight.set(shootSpeedR);
+    return;
+  }
+  public void release(){
+    m_intake.set(-intake);
     m_shooterLeft.set(shootSpeedL);
     m_shooterRight.set(shootSpeedR);
     return;
@@ -144,7 +159,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public Command outtakeL1Command(){
-    return run(this::outtakeTree);
+    return run(this::outtakeL1);
   }
 
   // public Command HoldCommand(){
@@ -153,6 +168,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public Command intakeCommand() {
     return run(this::intake);
+  }
+  public Command releaseCommand() {
+    return run(this::release);
   }
 
 

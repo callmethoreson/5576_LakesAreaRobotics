@@ -1,0 +1,66 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.19675,
+        "y": 5.204749999999999
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.43593708955489,
+        "y": 5.72928951699077
+      },
+      "isLocked": false,
+      "linkedName": "Coral Place 1"
+    },
+    {
+      "anchor": {
+        "x": 1.25775,
+        "y": 6.9792499999999995
+      },
+      "prevControl": {
+        "x": 1.9863427036082864,
+        "y": 6.57724858564575
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Intake 1"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "Intake_Coral",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Intake_Coral"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -54.0
+  },
+  "reversed": false,
+  "folder": "Caleb Test Folder",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -119.99999999999999
+  },
+  "useDefaultConstraints": true
+}

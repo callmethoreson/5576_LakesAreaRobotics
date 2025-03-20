@@ -4,31 +4,21 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ShooterSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Subsystem;
-
-import com.revrobotics.spark.SparkMax;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.RelativeEncoder;
 
 /** An example command that uses an example subsystem. */
-public class SetElevatorHeight extends Command {
+public class ExampleCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final ElevatorSubsystem m_subsystem;
-  private final double desiredHeight;
-  private boolean finished;
+  private final ExampleSubsystem m_subsystem;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public SetElevatorHeight(ElevatorSubsystem subsystem, double absDistance) {
+  public ExampleCommand(ExampleSubsystem subsystem) {
     m_subsystem = subsystem;
-    desiredHeight = absDistance;
-    finished = false;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -39,9 +29,7 @@ public class SetElevatorHeight extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-    m_subsystem.setDesiredHeight(desiredHeight);
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override
@@ -50,6 +38,6 @@ public class SetElevatorHeight extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return finished;
+    return false;
   }
 }
