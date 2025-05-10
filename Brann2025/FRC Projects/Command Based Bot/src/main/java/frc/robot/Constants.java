@@ -8,6 +8,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.math.*;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -17,24 +19,11 @@ import edu.wpi.first.math.util.Units;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static class OperatorConstants {
+    public static final int kDriverControllerPort = 0;
+    public static final int kSecondControllerPort = 2;
 
-  public static final class SubsystemConstants {
-    //elevator
-    public static final int kLeftElevatorCanID = 3;
-    public static final int kRightElevatorCanID = 4;
-
-    //shooter
-    public static final int kShooterCanID = 5;
-    public static final int kWristCanID = 6;
-
-    //climber
-    public static final int kClimberCanID = 7;
-
-  }
-
-
-
-  public static final class DriveConstants {
+    public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
     public static final double kMaxSpeedMetersPerSecond = 4.8;
@@ -92,11 +81,9 @@ public final class Constants {
 
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
-    public static final int kAssistControllerPort = 1;
-
     public static final double kDriveDeadband = 0.25;
   }
-  
+
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
@@ -114,6 +101,6 @@ public final class Constants {
 
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
+   }
   }
-
 }
